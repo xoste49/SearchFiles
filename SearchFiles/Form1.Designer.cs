@@ -35,18 +35,21 @@
          this.bPathSearch = new System.Windows.Forms.Button();
          this.tvResultSearch = new System.Windows.Forms.TreeView();
          this.tSearchContent = new System.Windows.Forms.TextBox();
+         this.lPath = new System.Windows.Forms.Label();
+         this.lMask = new System.Windows.Forms.Label();
+         this.label1 = new System.Windows.Forms.Label();
          this.SuspendLayout();
          // 
          // tSearchMask
          // 
-         this.tSearchMask.Location = new System.Drawing.Point(12, 40);
+         this.tSearchMask.Location = new System.Drawing.Point(11, 70);
          this.tSearchMask.Name = "tSearchMask";
-         this.tSearchMask.Size = new System.Drawing.Size(694, 20);
+         this.tSearchMask.Size = new System.Drawing.Size(695, 20);
          this.tSearchMask.TabIndex = 0;
          // 
          // bSearch
          // 
-         this.bSearch.Location = new System.Drawing.Point(713, 63);
+         this.bSearch.Location = new System.Drawing.Point(713, 116);
          this.bSearch.Name = "bSearch";
          this.bSearch.Size = new System.Drawing.Size(75, 23);
          this.bSearch.TabIndex = 1;
@@ -61,15 +64,15 @@
          // tPath
          // 
          this.tPath.Cursor = System.Windows.Forms.Cursors.IBeam;
-         this.tPath.Location = new System.Drawing.Point(12, 13);
+         this.tPath.Location = new System.Drawing.Point(11, 27);
          this.tPath.Name = "tPath";
          this.tPath.ReadOnly = true;
-         this.tPath.Size = new System.Drawing.Size(306, 20);
+         this.tPath.Size = new System.Drawing.Size(695, 20);
          this.tPath.TabIndex = 2;
          // 
          // bPathSearch
          // 
-         this.bPathSearch.Location = new System.Drawing.Point(324, 11);
+         this.bPathSearch.Location = new System.Drawing.Point(713, 25);
          this.bPathSearch.Name = "bPathSearch";
          this.bPathSearch.Size = new System.Drawing.Size(75, 23);
          this.bPathSearch.TabIndex = 3;
@@ -79,23 +82,53 @@
          // 
          // tvResultSearch
          // 
-         this.tvResultSearch.Location = new System.Drawing.Point(12, 100);
+         this.tvResultSearch.Location = new System.Drawing.Point(11, 145);
          this.tvResultSearch.Name = "tvResultSearch";
-         this.tvResultSearch.Size = new System.Drawing.Size(351, 319);
+         this.tvResultSearch.Size = new System.Drawing.Size(777, 427);
          this.tvResultSearch.TabIndex = 4;
          // 
          // tSearchContent
          // 
-         this.tSearchContent.Location = new System.Drawing.Point(12, 66);
+         this.tSearchContent.Location = new System.Drawing.Point(11, 118);
          this.tSearchContent.Name = "tSearchContent";
-         this.tSearchContent.Size = new System.Drawing.Size(694, 20);
+         this.tSearchContent.Size = new System.Drawing.Size(695, 20);
          this.tSearchContent.TabIndex = 5;
+         // 
+         // lPath
+         // 
+         this.lPath.AutoSize = true;
+         this.lPath.Location = new System.Drawing.Point(12, 9);
+         this.lPath.Name = "lPath";
+         this.lPath.Size = new System.Drawing.Size(108, 13);
+         this.lPath.TabIndex = 6;
+         this.lPath.Text = "Каталог для поиска";
+         // 
+         // lMask
+         // 
+         this.lMask.AutoSize = true;
+         this.lMask.Location = new System.Drawing.Point(12, 54);
+         this.lMask.Name = "lMask";
+         this.lMask.Size = new System.Drawing.Size(188, 13);
+         this.lMask.TabIndex = 7;
+         this.lMask.Text = "Шаблон файлов для поиска (маска)";
+         // 
+         // label1
+         // 
+         this.label1.AutoSize = true;
+         this.label1.Location = new System.Drawing.Point(12, 102);
+         this.label1.Name = "label1";
+         this.label1.Size = new System.Drawing.Size(97, 13);
+         this.label1.TabIndex = 8;
+         this.label1.Text = "Текст для поиска";
          // 
          // Form1
          // 
          this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
          this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-         this.ClientSize = new System.Drawing.Size(800, 450);
+         this.ClientSize = new System.Drawing.Size(800, 584);
+         this.Controls.Add(this.label1);
+         this.Controls.Add(this.lMask);
+         this.Controls.Add(this.lPath);
          this.Controls.Add(this.tSearchContent);
          this.Controls.Add(this.tvResultSearch);
          this.Controls.Add(this.bPathSearch);
@@ -118,6 +151,9 @@
         private System.Windows.Forms.Button bPathSearch;
         private System.Windows.Forms.TreeView tvResultSearch;
         private System.Windows.Forms.TextBox tSearchContent;
+        private System.Windows.Forms.Label lPath;
+        private System.Windows.Forms.Label lMask;
+        private System.Windows.Forms.Label label1;
     }
 }
 
