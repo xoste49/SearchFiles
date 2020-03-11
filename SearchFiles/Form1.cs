@@ -13,18 +13,19 @@ namespace SearchFiles
 {
    public partial class Form1 : Form
    {
-      // Программа будет использоваться для поиска файлов на диске
-      // Пользователь следующие критерии и они должны быть сохранены при перезапуске программы:
+      // + Все найденные по критериям файлы в виде дерева(как в левой части проводника)
+
       // + 1. Стартовая директория(с которой начинается поиск)
 
       // + 2. Шаблон имени файла
 
-      //3. Набор символов, которые могут содержаться в файле
+      // + 3. Набор символов, которые могут содержаться в файле
 
+      // + 4. Сохранение директории, шаблона имени и набора символов
 
       //Затем пользователь нажимает кнопку Поиск и программа начинает отображать следующую информацию в режиме реального времени:
 
-      //Все найденные по критериям файлы в виде дерева(как в левой части проводника). Дерево не должно подвисать, моргать тормозить и т.д.Во время поиска пользователь может ходить по дереву, открывать/закрывать узлы.
+      //Все найденные по критериям файлы в виде дерева(как в левой части проводника). Дерево не должно подвисать, моргать тормозить и т.д. Во время поиска пользователь может ходить по дереву, открывать/закрывать узлы.
       //Какой файл обрабатывается в данный момент
       //Количество обработанных файлов
       //Прошедшее от начала запуска поиска время
@@ -32,6 +33,9 @@ namespace SearchFiles
       public Form1()
       {
          InitializeComponent();
+         if (!string.IsNullOrEmpty(Properties.Settings.Default.Path)) tPath.Text = Properties.Settings.Default.Path;
+         if (!string.IsNullOrEmpty(Properties.Settings.Default.SearchContent)) tSearchContent.Text = Properties.Settings.Default.SearchContent;
+         if (!string.IsNullOrEmpty(Properties.Settings.Default.SearchMask)) tSearchMask.Text = Properties.Settings.Default.SearchMask;
       }
 
       // Выбор папки
@@ -75,11 +79,8 @@ namespace SearchFiles
                TreeNode nodeDir = new TreeNode(dir.Name);
                // Добавляем его как дочерний к текущему узлу
                node.Nodes.Add(nodeDir);
-               // Развертываем узел
-               nodeDir.Expand();
                // Делаем дочерний узел текущим и спускаемся рекурсивно ниже
                AddDirectories(nodeDir);
-
             }
          } 
          catch { }
@@ -89,13 +90,42 @@ namespace SearchFiles
             if (!string.IsNullOrEmpty(tSearchMask.Text)) { fileInfos = dirInfo.GetFiles(tSearchMask.Text); }
             else { fileInfos = dirInfo.GetFiles(); }
 
-            foreach (FileInfo f in fileInfos)
+            // Если строка поиска по содержимому не пуска то выполняем поиск по содержимому
+            if (!string.IsNullOrEmpty(tSearchContent.Text)) {
+               foreach (FileInfo f in fileInfos)
+               {
+                  string text = File.ReadAllText(f.FullName);
+                  if(text.Contains(tSearchContent.Text)) node.Nodes.Add(f.Name);
+               }
+            } else
             {
-               node.Nodes.Add(f.Name);
+               foreach (FileInfo f in fileInfos)
+               {
+                  node.Nodes.Add(f.Name);
+               }
             }
-            
          } catch { }
+         // Развертываем
+         node.Expand();
          if (node.Nodes.Count == 0) node.Remove();
+      }
+
+      private void tPath_TextChanged(object sender, EventArgs e)
+      {
+         Properties.Settings.Default.Path = tPath.Text;
+         Properties.Settings.Default.Save();
+      }
+
+      private void tSearchMask_TextChanged(object sender, EventArgs e)
+      {
+         Properties.Settings.Default.SearchMask = tSearchMask.Text;
+         Properties.Settings.Default.Save();
+      }
+
+      private void tSearchContent_TextChanged(object sender, EventArgs e)
+      {
+         Properties.Settings.Default.SearchContent = tSearchContent.Text;
+         Properties.Settings.Default.Save();
       }
    }
 

@@ -46,6 +46,7 @@
          this.tSearchMask.Name = "tSearchMask";
          this.tSearchMask.Size = new System.Drawing.Size(695, 20);
          this.tSearchMask.TabIndex = 0;
+         this.tSearchMask.TextChanged += new System.EventHandler(this.tSearchMask_TextChanged);
          // 
          // bSearch
          // 
@@ -69,6 +70,7 @@
          this.tPath.ReadOnly = true;
          this.tPath.Size = new System.Drawing.Size(695, 20);
          this.tPath.TabIndex = 2;
+         this.tPath.TextChanged += new System.EventHandler(this.tPath_TextChanged);
          // 
          // bPathSearch
          // 
@@ -93,6 +95,7 @@
          this.tSearchContent.Name = "tSearchContent";
          this.tSearchContent.Size = new System.Drawing.Size(695, 20);
          this.tSearchContent.TabIndex = 5;
+         this.tSearchContent.TextChanged += new System.EventHandler(this.tSearchContent_TextChanged);
          // 
          // lPath
          // 
