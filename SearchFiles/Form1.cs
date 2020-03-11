@@ -23,17 +23,19 @@ namespace SearchFiles
 
       // + 4. Сохранение директории, шаблона имени и набора символов
 
-      //Какой файл обрабатывается в данный момент
+      // + Какой файл обрабатывается в данный момент
 
       // + Количество обработанных файлов
+
+      // Прошедшее от начала запуска поиска время
+
+      //Пользователь должен иметь возможность остановить поиск в любой момент и затем либо продолжить его либо начать новый поиск.
 
       //Затем пользователь нажимает кнопку Поиск и программа начинает отображать следующую информацию в режиме реального времени:
 
       //Все найденные по критериям файлы в виде дерева(как в левой части проводника). Дерево не должно подвисать, моргать тормозить и т.д. Во время поиска пользователь может ходить по дереву, открывать/закрывать узлы.
-      //Какой файл обрабатывается в данный момент
-      //Количество обработанных файлов
-      //Прошедшее от начала запуска поиска время
-      //Пользователь должен иметь возможность остановить поиск в любой момент и затем либо продолжить его либо начать новый поиск.
+
+
 
       private int countFiles = 0;
       private int CountFiles
@@ -41,7 +43,7 @@ namespace SearchFiles
          get { return countFiles; }
          set
          {
-            tsslCountFiles.Text = "Колличество найденных файлов: " + value.ToString();
+            lCountFiles.Text = "Колличество найденных файлов: " + value.ToString();
             countFiles = value;
          }
       }
@@ -70,9 +72,9 @@ namespace SearchFiles
 
          TreeNode treeNode = new TreeNode(tPath.Text);
          tvResultSearch.Nodes.Add(treeNode);
+         treeNode.Expand();
          // Считываем дерево
          AddDirectories(treeNode);
-         treeNode.Expand();
       }
 
       // Рекурсивный метод
@@ -112,6 +114,7 @@ namespace SearchFiles
                foreach (FileInfo f in fileInfos)
                {
                   string text = File.ReadAllText(f.FullName);
+                  tsslCurrentFile.Text = f.FullName;
                   if (text.Contains(tSearchContent.Text)) 
                   { 
                      node.Nodes.Add(f.Name);
@@ -123,6 +126,7 @@ namespace SearchFiles
                foreach (FileInfo f in fileInfos)
                {
                   node.Nodes.Add(f.Name);
+                  tsslCurrentFile.Text = f.FullName;
                   CountFiles++;
                }
             }
