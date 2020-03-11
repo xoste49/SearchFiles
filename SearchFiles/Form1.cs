@@ -23,6 +23,10 @@ namespace SearchFiles
 
       // + 4. Сохранение директории, шаблона имени и набора символов
 
+      //Какой файл обрабатывается в данный момент
+
+      // + Количество обработанных файлов
+
       //Затем пользователь нажимает кнопку Поиск и программа начинает отображать следующую информацию в режиме реального времени:
 
       //Все найденные по критериям файлы в виде дерева(как в левой части проводника). Дерево не должно подвисать, моргать тормозить и т.д. Во время поиска пользователь может ходить по дереву, открывать/закрывать узлы.
@@ -30,6 +34,18 @@ namespace SearchFiles
       //Количество обработанных файлов
       //Прошедшее от начала запуска поиска время
       //Пользователь должен иметь возможность остановить поиск в любой момент и затем либо продолжить его либо начать новый поиск.
+
+      private int countFiles = 0;
+      private int CountFiles
+      {
+         get { return countFiles; }
+         set
+         {
+            tsslCountFiles.Text = "Колличество найденных файлов: " + value.ToString();
+            countFiles = value;
+         }
+      }
+
       public Form1()
       {
          InitializeComponent();
@@ -50,6 +66,7 @@ namespace SearchFiles
       {
          // Очистка
          tvResultSearch.Nodes.Clear();
+         CountFiles = 0;
 
          TreeNode treeNode = new TreeNode(tPath.Text);
          tvResultSearch.Nodes.Add(treeNode);
@@ -95,13 +112,18 @@ namespace SearchFiles
                foreach (FileInfo f in fileInfos)
                {
                   string text = File.ReadAllText(f.FullName);
-                  if(text.Contains(tSearchContent.Text)) node.Nodes.Add(f.Name);
+                  if (text.Contains(tSearchContent.Text)) 
+                  { 
+                     node.Nodes.Add(f.Name);
+                     CountFiles++;
+                  }
                }
             } else
             {
                foreach (FileInfo f in fileInfos)
                {
                   node.Nodes.Add(f.Name);
+                  CountFiles++;
                }
             }
          } catch { }
