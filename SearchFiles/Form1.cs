@@ -17,7 +17,7 @@ namespace SearchFiles
       // Пользователь следующие критерии и они должны быть сохранены при перезапуске программы:
       // + 1. Стартовая директория(с которой начинается поиск)
 
-      //2. Шаблон имени файла
+      // + 2. Шаблон имени файла
 
       //3. Набор символов, которые могут содержаться в файле
 
@@ -34,19 +34,24 @@ namespace SearchFiles
          InitializeComponent();
       }
 
+      // Выбор папки
       private void bPathSearch_Click(object sender, EventArgs e)
       {
          fBrowserDialog.ShowDialog();
          tPath.Text = fBrowserDialog.SelectedPath;
       }
 
+      
       private void bSearch_Click(object sender, EventArgs e)
       {
+         // Очистка
+         tvResultSearch.Nodes.Clear();
+
          TreeNode treeNode = new TreeNode(tPath.Text);
          tvResultSearch.Nodes.Add(treeNode);
-         treeNode.Expand();
-         // Считываем дерево каталогов
+         // Считываем дерево
          AddDirectories(treeNode);
+         treeNode.Expand();
       }
 
       // Рекурсивный метод
@@ -57,32 +62,41 @@ namespace SearchFiles
          // Создаем объект текущего каталога
          DirectoryInfo dirInfo = new DirectoryInfo(strPath);
          // Объявляем ссылку на массив подкаталогов текущего каталога
-         DirectoryInfo[] arrayDirInfo;
-
+         DirectoryInfo[] directoryInfos;
+         FileInfo[] fileInfos;
          try
          {
             // Пытаемся получить список подкаталогов
-            arrayDirInfo = dirInfo.GetDirectories();
-         } catch
-         {
-            // Подкаталогов нет, выходим из рекурсии
-            return;
-         }
+            directoryInfos = dirInfo.GetDirectories();
+            // Добавляем прочитанные подкаталоги как узлы в дерево просмотра
+            foreach (DirectoryInfo dir in directoryInfos)
+            {
+               // Создаем новый узел с именем подкаталога
+               TreeNode nodeDir = new TreeNode(dir.Name);
+               // Добавляем его как дочерний к текущему узлу
+               node.Nodes.Add(nodeDir);
+               // Развертываем узел
+               nodeDir.Expand();
+               // Делаем дочерний узел текущим и спускаемся рекурсивно ниже
+               AddDirectories(nodeDir);
 
-         // Добавляем прочитанные подкаталоги как узлы в дерево просмотра
-         foreach (DirectoryInfo dir in arrayDirInfo)
+            }
+         } 
+         catch { }
+         try
          {
-            // Создаем новый узел с именем подкаталога
-            TreeNode nodeDir = new TreeNode(dir.Name);
-            // Добавляем его как дочерний к текущему узлу
-            node.Nodes.Add(nodeDir);
-            // Развертываем узел
-            //nodeDir.Expand();
-            // Делаем дочерний узел текущим и спускаемся рекурсивно ниже
-            AddDirectories(nodeDir);
-         }
+            // Пытаемся получить список файлов по маске
+            if (!string.IsNullOrEmpty(tSearchMask.Text)) { fileInfos = dirInfo.GetFiles(tSearchMask.Text); }
+            else { fileInfos = dirInfo.GetFiles(); }
+
+            foreach (FileInfo f in fileInfos)
+            {
+               node.Nodes.Add(f.Name);
+            }
+            
+         } catch { }
+         if (node.Nodes.Count == 0) node.Remove();
       }
-
-     
    }
+
 }
