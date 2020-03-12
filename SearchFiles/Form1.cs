@@ -7,6 +7,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -37,7 +38,6 @@ namespace SearchFiles
       //Все найденные по критериям файлы в виде дерева(как в левой части проводника). Дерево не должно подвисать, моргать тормозить и т.д. Во время поиска пользователь может ходить по дереву, открывать/закрывать узлы.
 
 
-
       private int countFiles = 0;
       private int CountFiles
       {
@@ -66,21 +66,27 @@ namespace SearchFiles
          tPath.Text = fBrowserDialog.SelectedPath;
       }
 
-      
+
       private void bSearch_Click(object sender, EventArgs e)
       {
-         stopWatch.Start(); // Запуск таймера
-         //timerTimeSum.Enabled = true;
+         Search();
+      }
+
+
+      public void Search()
+      {
+         // Запуск таймера
+         stopWatch.Start(); 
          // Очистка
          tvResultSearch.Nodes.Clear();
          CountFiles = 0;
-
          TreeNode treeNode = new TreeNode(tPath.Text);
          tvResultSearch.Nodes.Add(treeNode);
          treeNode.Expand();
          // Считываем дерево
          AddDirectories(treeNode);
-         stopWatch.Stop(); // Остановка таймера
+         // Остановка таймера
+         stopWatch.Stop(); 
          //timerTimeSum.Enabled = false;
       }
 
@@ -108,22 +114,21 @@ namespace SearchFiles
                // Делаем дочерний узел текущим и спускаемся рекурсивно ниже
                AddDirectories(nodeDir);
             }
-         } 
-         catch { }
+         } catch { }
          try
          {
             // Пытаемся получить список файлов по маске
-            if (!string.IsNullOrEmpty(tSearchMask.Text)) { fileInfos = dirInfo.GetFiles(tSearchMask.Text); }
-            else { fileInfos = dirInfo.GetFiles(); }
+            if (!string.IsNullOrEmpty(tSearchMask.Text)) { fileInfos = dirInfo.GetFiles(tSearchMask.Text); } else { fileInfos = dirInfo.GetFiles(); }
 
             // Если строка поиска по содержимому не пуска то выполняем поиск по содержимому
-            if (!string.IsNullOrEmpty(tSearchContent.Text)) {
+            if (!string.IsNullOrEmpty(tSearchContent.Text))
+            {
                foreach (FileInfo f in fileInfos)
                {
                   string text = File.ReadAllText(f.FullName);
                   tsslCurrentFile.Text = f.FullName;
-                  if (text.Contains(tSearchContent.Text)) 
-                  { 
+                  if (text.Contains(tSearchContent.Text))
+                  {
                      node.Nodes.Add(f.Name);
                      CountFiles++;
                   }
@@ -139,7 +144,7 @@ namespace SearchFiles
             }
          } catch { }
          // Развертываем
-         node.Expand();
+         //node.Expand();
          if (node.Nodes.Count == 0) node.Remove();
       }
 
