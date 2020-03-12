@@ -33,9 +33,9 @@ namespace SearchFiles
 
       //Пользователь должен иметь возможность остановить поиск в любой момент и затем либо продолжить его либо начать новый поиск.
 
-      //Затем пользователь нажимает кнопку Поиск и программа начинает отображать следующую информацию в режиме реального времени:
+      // + Затем пользователь нажимает кнопку Поиск и программа начинает отображать следующую информацию в режиме реального времени:
 
-      //Все найденные по критериям файлы в виде дерева(как в левой части проводника). Дерево не должно подвисать, моргать тормозить и т.д. Во время поиска пользователь может ходить по дереву, открывать/закрывать узлы.
+      // + Все найденные по критериям файлы в виде дерева(как в левой части проводника). Дерево не должно подвисать, моргать тормозить и т.д. Во время поиска пользователь может ходить по дереву, открывать/закрывать узлы.
 
 
       private int countFiles = 0;
@@ -44,7 +44,7 @@ namespace SearchFiles
          get { return countFiles; }
          set
          {
-            lCountFiles.Text = "Колличество найденных файлов: " + value.ToString();
+            Invoke(new MethodInvoker(() => { lCountFiles.Text = "Колличество найденных файлов: " + value.ToString(); }));
             countFiles = value;
          }
       }
@@ -67,27 +67,34 @@ namespace SearchFiles
       }
 
 
-      private void bSearch_Click(object sender, EventArgs e)
+      private async void bSearch_Click(object sender, EventArgs e)
       {
-         Search();
+         //await Search();
+         bSearch.Enabled = false;
+         await Task.Factory.StartNew(Search);
+         bSearch.Enabled = true;
       }
 
 
       public void Search()
       {
+         // Очистка
+         Invoke(new MethodInvoker(() => {   tvResultSearch.Nodes.Clear();   }));
+         CountFiles = 0;
+         stopWatch.Reset();
+
          // Запуск таймера
          stopWatch.Start(); 
-         // Очистка
-         tvResultSearch.Nodes.Clear();
-         CountFiles = 0;
          TreeNode treeNode = new TreeNode(tPath.Text);
-         tvResultSearch.Nodes.Add(treeNode);
-         treeNode.Expand();
-         // Считываем дерево
+         Invoke(new MethodInvoker(() => { 
+            tvResultSearch.Nodes.Add(treeNode);
+            treeNode.Expand();
+         }));
          AddDirectories(treeNode);
+         // Считываем дерево
+
          // Остановка таймера
          stopWatch.Stop(); 
-         //timerTimeSum.Enabled = false;
       }
 
       // Рекурсивный метод
@@ -110,11 +117,12 @@ namespace SearchFiles
                // Создаем новый узел с именем подкаталога
                TreeNode nodeDir = new TreeNode(dir.Name);
                // Добавляем его как дочерний к текущему узлу
-               node.Nodes.Add(nodeDir);
+               Invoke(new MethodInvoker(() => { node.Nodes.Add(nodeDir); }));
+               //node.Nodes.Add(nodeDir);
                // Делаем дочерний узел текущим и спускаемся рекурсивно ниже
                AddDirectories(nodeDir);
             }
-         } catch { }
+         } catch { throw; }
          try
          {
             // Пытаемся получить список файлов по маске
@@ -125,11 +133,12 @@ namespace SearchFiles
             {
                foreach (FileInfo f in fileInfos)
                {
+                  Invoke(new MethodInvoker(() => { tsslCurrentFile.Text = f.FullName; }));
                   string text = File.ReadAllText(f.FullName);
-                  tsslCurrentFile.Text = f.FullName;
                   if (text.Contains(tSearchContent.Text))
                   {
-                     node.Nodes.Add(f.Name);
+                     Invoke(new MethodInvoker(() => { node.Nodes.Add(f.Name); }));
+                     //node.Nodes.Add(f.Name);
                      CountFiles++;
                   }
                }
@@ -137,15 +146,20 @@ namespace SearchFiles
             {
                foreach (FileInfo f in fileInfos)
                {
-                  node.Nodes.Add(f.Name);
-                  tsslCurrentFile.Text = f.FullName;
+                  Invoke(new MethodInvoker(() => { node.Nodes.Add(f.Name); }));
+                  //node.Nodes.Add(f.Name);
+                  Invoke(new MethodInvoker(() => { tsslCurrentFile.Text = f.FullName;}));
                   CountFiles++;
                }
             }
-         } catch { }
+         } catch { throw; }
          // Развертываем
-         //node.Expand();
-         if (node.Nodes.Count == 0) node.Remove();
+         Invoke(new MethodInvoker(() => { node.Expand(); })); 
+         if (node.Nodes.Count == 0) { 
+            Invoke(new MethodInvoker(() => { node.Remove(); })); 
+            node.Remove();
+         }
+
       }
 
       private void tPath_TextChanged(object sender, EventArgs e)
