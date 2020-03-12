@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -27,7 +28,7 @@ namespace SearchFiles
 
       // + Количество обработанных файлов
 
-      // Прошедшее от начала запуска поиска время
+      // + Прошедшее от начала запуска поиска время
 
       //Пользователь должен иметь возможность остановить поиск в любой момент и затем либо продолжить его либо начать новый поиск.
 
@@ -48,6 +49,8 @@ namespace SearchFiles
          }
       }
 
+      Stopwatch stopWatch = new Stopwatch();
+
       public Form1()
       {
          InitializeComponent();
@@ -66,6 +69,8 @@ namespace SearchFiles
       
       private void bSearch_Click(object sender, EventArgs e)
       {
+         stopWatch.Start(); // Запуск таймера
+         //timerTimeSum.Enabled = true;
          // Очистка
          tvResultSearch.Nodes.Clear();
          CountFiles = 0;
@@ -75,6 +80,8 @@ namespace SearchFiles
          treeNode.Expand();
          // Считываем дерево
          AddDirectories(treeNode);
+         stopWatch.Stop(); // Остановка таймера
+         //timerTimeSum.Enabled = false;
       }
 
       // Рекурсивный метод
@@ -152,6 +159,13 @@ namespace SearchFiles
       {
          Properties.Settings.Default.SearchContent = tSearchContent.Text;
          Properties.Settings.Default.Save();
+      }
+
+      private void timerTimeSum_Tick(object sender, EventArgs e)
+      {
+         TimeSpan ts = stopWatch.Elapsed;
+         string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}", ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds / 10);
+         tsslCurrentTime.Text = elapsedTime;
       }
    }
 

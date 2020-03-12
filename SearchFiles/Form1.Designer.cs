@@ -28,6 +28,7 @@
       /// </summary>
       private void InitializeComponent()
       {
+         this.components = new System.ComponentModel.Container();
          this.tSearchMask = new System.Windows.Forms.TextBox();
          this.bSearch = new System.Windows.Forms.Button();
          this.fBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
@@ -41,6 +42,8 @@
          this.statusStrip1 = new System.Windows.Forms.StatusStrip();
          this.tsslCurrentFile = new System.Windows.Forms.ToolStripStatusLabel();
          this.lCountFiles = new System.Windows.Forms.Label();
+         this.tsslCurrentTime = new System.Windows.Forms.ToolStripStatusLabel();
+         this.timerTimeSum = new System.Windows.Forms.Timer(this.components);
          this.statusStrip1.SuspendLayout();
          this.SuspendLayout();
          // 
@@ -131,17 +134,20 @@
          // statusStrip1
          // 
          this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tsslCurrentFile});
+            this.tsslCurrentFile,
+            this.tsslCurrentTime});
          this.statusStrip1.Location = new System.Drawing.Point(0, 585);
          this.statusStrip1.Name = "statusStrip1";
          this.statusStrip1.Size = new System.Drawing.Size(800, 22);
+         this.statusStrip1.SizingGrip = false;
          this.statusStrip1.TabIndex = 9;
          this.statusStrip1.Text = "statusStrip1";
          // 
          // tsslCurrentFile
          // 
+         this.tsslCurrentFile.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Left;
          this.tsslCurrentFile.Name = "tsslCurrentFile";
-         this.tsslCurrentFile.Size = new System.Drawing.Size(0, 17);
+         this.tsslCurrentFile.Size = new System.Drawing.Size(4, 17);
          // 
          // lCountFiles
          // 
@@ -150,6 +156,18 @@
          this.lCountFiles.Name = "lCountFiles";
          this.lCountFiles.Size = new System.Drawing.Size(0, 13);
          this.lCountFiles.TabIndex = 10;
+         // 
+         // tsslCurrentTime
+         // 
+         this.tsslCurrentTime.Name = "tsslCurrentTime";
+         this.tsslCurrentTime.Size = new System.Drawing.Size(781, 17);
+         this.tsslCurrentTime.Spring = true;
+         this.tsslCurrentTime.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+         // 
+         // timerTimeSum
+         // 
+         this.timerTimeSum.Enabled = true;
+         this.timerTimeSum.Tick += new System.EventHandler(this.timerTimeSum_Tick);
          // 
          // Form1
          // 
@@ -191,6 +209,8 @@
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripStatusLabel tsslCurrentFile;
         private System.Windows.Forms.Label lCountFiles;
+        private System.Windows.Forms.ToolStripStatusLabel tsslCurrentTime;
+        private System.Windows.Forms.Timer timerTimeSum;
     }
 }
 
